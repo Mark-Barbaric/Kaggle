@@ -20,3 +20,11 @@ def test_preprocesing_http_preprocessing():
     text="[tag]http://asdadd.com This is the way to go!"
     ans=preprocess_text(text)
     assert ans == "tag this is the way to go"
+
+
+def test_preprocesing_http_preprocessing():
+    
+    text="@aria_ahrary @TheTawniest The out of control w"
+    ans=preprocess_text(text)
+    assert ans == "the out of control w"
+    
