@@ -7,3 +7,4 @@ matplotlib
 scikit-learn
 category_encoders
 openpyxl
+seaborn
