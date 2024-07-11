@@ -48,7 +48,7 @@ def drop_unnecessary_columns(df):
 
 
 def preprocess_dataset(df, mean_age_by_titles, titles):
-    """_summary_
+    """Class used to preprocess Titanic DataFrame in place.
 
     Args:
         df (_type_): _description_

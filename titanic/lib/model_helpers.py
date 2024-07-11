@@ -6,7 +6,18 @@ from xgboost import XGBClassifier
 from sklearn.model_selection import GridSearchCV
 
 
-def grid_search_and_best_params(X_train, y_train, model, param_grid):
+def _grid_search_and_best_params(X_train, y_train, model, param_grid, scoring='f1'):
+    """Performs GridSearchCV and returns the best_params and best_estimator. Takes in param_grid from user.
+
+    Args:
+        X_train (_type_): _description_
+        y_train (_type_): _description_
+        model (_type_): _description_
+        param_grid (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     fit_params = {
         'early_stopping_rounds': 0
     }
@@ -14,7 +25,7 @@ def grid_search_and_best_params(X_train, y_train, model, param_grid):
         estimator=model,
         param_grid=param_grid,
         n_jobs=-1,
-        scoring='f1',
+        scoring=scoring,
         cv=5
     )
     grid_search.fit(X_train, y_train)
@@ -22,6 +33,16 @@ def grid_search_and_best_params(X_train, y_train, model, param_grid):
 
 
 def grid_search_xgb(X_train, y_train, random_state):
+    """Performs GridSearchCV for XGBClassifier
+
+    Args:
+        X_train (_type_): _description_
+        y_train (_type_): _description_
+        random_state (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     param_grid = {
         'n_estimators': range(8, 22, 2),
         'learning_rate': [0.5, 0.1, 0.05],
@@ -32,10 +53,20 @@ def grid_search_xgb(X_train, y_train, random_state):
         random_state=random_state,
         n_jobs=-1
     )
-    return grid_search_and_best_params(X_train, y_train, model, param_grid)
+    return _grid_search_and_best_params(X_train, y_train, model, param_grid)
 
 
 def grid_search_bc(X_train, y_train, random_state):
+    """Performs GridSearchCV on Bagging Classifier
+
+    Args:
+        X_train (_type_): _description_
+        y_train (_type_): _description_
+        random_state (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     param_grid = {
         'n_estimators': [10, 12, 14, 16],
         'oob_score': [True, False]
@@ -44,10 +75,20 @@ def grid_search_bc(X_train, y_train, random_state):
         random_state=random_state,
         n_jobs=-1
     )
-    return grid_search_and_best_params(X_train, y_train, model, param_grid)
+    return _grid_search_and_best_params(X_train, y_train, model, param_grid)
 
 
 def grid_search_rf(X_train, y_train, random_state):
+    """Performs GridSearchCV on Random Forest Classifier
+
+    Args:
+        X_train (_type_): _description_
+        y_train (_type_): _description_
+        random_state (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     param_grid = {
         'n_estimators': [100, 125, 150, 200],
         'max_depth': [50, 75, 100],
@@ -60,10 +101,20 @@ def grid_search_rf(X_train, y_train, random_state):
         oob_score=True,
         n_jobs=-1
     )
-    return grid_search_and_best_params(X_train, y_train, model, param_grid)
+    return _grid_search_and_best_params(X_train, y_train, model, param_grid)
 
 
 def grid_search_dt(X_train, y_train, random_state):
+    """Performs GridSearchCV on Decision Tree
+
+    Args:
+        X_train (_type_): _description_
+        y_train (_type_): _description_
+        random_state (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     param_grid = {
         'criterion': ['gini', 'entropy', 'log_loss'],
         'max_depth': [25, 50, 75, 100],
@@ -72,10 +123,20 @@ def grid_search_dt(X_train, y_train, random_state):
     model = DecisionTreeClassifier(
         random_state=random_state
     )
-    return grid_search_and_best_params(X_train, y_train, model, param_grid)
+    return _grid_search_and_best_params(X_train, y_train, model, param_grid)
 
 
 def grid_search_lr(X_train, y_train, random_state):
+    """Performs GridSearchCV on Logistic Regression
+
+    Args:
+        X_train (_type_): _description_
+        y_train (_type_): _description_
+        random_state (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     param_grid = {
         'Cs': [6, 8, 10, 12],
         'penalty': ['l1', 'l2'],
@@ -87,18 +148,32 @@ def grid_search_lr(X_train, y_train, random_state):
         n_jobs=-1
         
     )
-    return grid_search_and_best_params(X_train, y_train, model, param_grid)
+    return _grid_search_and_best_params(X_train, y_train, model, param_grid)
 
 
-def save_model(model, model_name: str):
+def save_model(model, model_dir: str):
+    """Saves model to directoy
+
+    Args:
+        model (_type_): _description_
+        model_name (str): Writes model to directory specified by user.
+    """
     
-    with open(model_name, 'wb') as f:
+    with open(model_dir, 'wb') as f:
         pickle.dump(model, f)
 
 
-def open_model(model_name: str):
+def open_model(model_dir: str):
+    """_summary_
+
+    Args:
+        model_dir (str): _description_
+
+    Returns:
+        _type_: Returns model from specified directory
+    """
     
-    with open(model_name, 'rb') as f:
+    with open(model_dir, 'rb') as f:
         model = pickle.load(f)
     
     return model
