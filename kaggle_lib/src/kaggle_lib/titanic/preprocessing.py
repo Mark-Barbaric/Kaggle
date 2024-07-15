@@ -1,7 +1,16 @@
 from sklearn.preprocessing import MinMaxScaler, LabelEncoder
+import pickle
 
 
-def replace_missing_age_values(df, mean_age_by_titles):
+def pickle_to_dict(pickle_dir: str) -> dict:
+    with open(pickle_dir, 'rb') as handle:
+        dict = pickle.load(handle)
+    
+    return dict
+
+
+def replace_missing_age_values(df):
+    mean_age_by_titles = pickle_to_dict('mean_age_by_titles.pickle')
     missing_age_mask = (df['Age'].isna())
     df.loc[missing_age_mask, 'Age'] = df[missing_age_mask].apply(lambda x : mean_age_by_titles[x['Title']], axis=1).values
 
@@ -47,7 +56,7 @@ def drop_unnecessary_columns(df):
     df.drop(COLUMNS_TO_DROP, inplace=True, axis=1)
 
 
-def preprocess_titanic_dataset(df, mean_age_by_titles, titles):
+def preprocess_titanic_dataset(df, titles):
     """Class used to preprocess Titanic DataFrame in place.
 
     Args:
@@ -56,7 +65,7 @@ def preprocess_titanic_dataset(df, mean_age_by_titles, titles):
     create_titles_column(df)
     create_family_size_column(df)
     create_group_size(df)
-    replace_missing_age_values(df, mean_age_by_titles)
+    replace_missing_age_values(df)
     replace_missing_fare_values(df)
     label_columns(df, titles)
     normalize_columns(df)
