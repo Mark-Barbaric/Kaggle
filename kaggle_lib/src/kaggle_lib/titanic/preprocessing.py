@@ -15,8 +15,7 @@ def get_mean_age_pickle_dir() -> str:
 
 
 def replace_missing_age_values(df):
-    
-    mean_age_by_titles = pickle_to_dict('mean_age_by_titles.pickle')
+    mean_age_by_titles = pickle_to_dict(get_mean_age_pickle_dir())
     missing_age_mask = (df['Age'].isna())
     df.loc[missing_age_mask, 'Age'] = df[missing_age_mask].apply(lambda x : mean_age_by_titles[x['Title']], axis=1).values
 
@@ -48,11 +47,12 @@ def normalize_columns(df):
     df[NUMERICAL_COLUMNS] = min_max_scaler.fit_transform(df[NUMERICAL_COLUMNS])
 
 
-def label_columns(df, titles):
+def label_columns(df):
     #TODO: move to ColumnTransformer class
     label_encoder = LabelEncoder()
     df['Sex'] = label_encoder.fit_transform(df['Sex'])
     df['Embarked'] = label_encoder.fit_transform(df['Embarked'])
+    titles = list(pickle_to_dict(get_mean_age_pickle_dir()).keys())
     label_encoder.fit(titles)
     df['Title'] = label_encoder.transform(df['Title'])
 
@@ -62,7 +62,7 @@ def drop_unnecessary_columns(df):
     df.drop(COLUMNS_TO_DROP, inplace=True, axis=1)
 
 
-def preprocess_titanic_dataset(df, titles):
+def preprocess_titanic_dataset(df):
     """Class used to preprocess Titanic DataFrame in place.
 
     Args:
@@ -73,6 +73,6 @@ def preprocess_titanic_dataset(df, titles):
     create_group_size(df)
     replace_missing_age_values(df)
     replace_missing_fare_values(df)
-    label_columns(df, titles)
+    label_columns(df)
     normalize_columns(df)
     drop_unnecessary_columns(df)
