@@ -1,15 +1,21 @@
 from sklearn.preprocessing import MinMaxScaler, LabelEncoder
-import pickle
+from kaggle_lib.kaggle_helpers import pickle_to_dict
+import pathlib
+import os
 
 
-def pickle_to_dict(pickle_dir: str) -> dict:
-    with open(pickle_dir, 'rb') as handle:
-        dict = pickle.load(handle)
-    
-    return dict
+def get_mean_age_pickle_dir() -> str:
+    """Returns the location of mean_age_by_titles.pickle file as an absolute path.
+
+    Returns:
+        str: _description_
+    """
+    current_dir = pathlib.Path(__file__).parent.resolve()
+    return os.path.join(current_dir, 'mean_age_by_titles.pickle')
 
 
 def replace_missing_age_values(df):
+    
     mean_age_by_titles = pickle_to_dict('mean_age_by_titles.pickle')
     missing_age_mask = (df['Age'].isna())
     df.loc[missing_age_mask, 'Age'] = df[missing_age_mask].apply(lambda x : mean_age_by_titles[x['Title']], axis=1).values
