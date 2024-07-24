@@ -19,6 +19,6 @@ def preprocess_text(text, stopwords):
     text = text.lower()
     text = remove_punctuations(text)
     text = text.replace('\s\s+', ' ')
-    text = text.apply(tweet_preprocessor.clean)
-    text = text.apply(lambda x : ' '.join([w for w in x.split(' ') if w not in stopwords]))
+    text = tweet_preprocessor.clean(text)
+    text = ' '.join([w for w in text.split(' ') if w not in stopwords])
     return text
