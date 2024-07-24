@@ -2,7 +2,7 @@
 
 # Kaggle
 
-**submission_*.csv
+*.csv
 
 # Poetry
 .venv
