@@ -1,0 +1,24 @@
+
+import preprocessor as tweet_preprocessor
+import string
+
+
+def preprocess_text(text, stopwords):
+    """_summary_
+
+    Args:
+        df (_type_): _description_
+        column_name (_type_): _description_
+        stopwords (_type_): _description_
+    """
+    def remove_punctuations(text: str):
+        for punctuation in string.punctuation:
+            text = text.replace(punctuation, '')
+        return text
+
+    text = text.lower()
+    text = remove_punctuations(text)
+    text = text.replace('\s\s+', ' ')
+    text = text.apply(tweet_preprocessor.clean)
+    text = text.apply(lambda x : ' '.join([w for w in x.split(' ') if w not in stopwords]))
+    return text
