@@ -2,6 +2,14 @@
 
 This repository contains workbooks related to various Kaggle Competitions. Full list is below.
 
+## Binary Classification of Insurance Selling
+
+https://www.kaggle.com/competitions/playground-series-s4e7/overview
+
+Contains various workbooks related to the Binary Classification of Insurance Selling challenge.
+
+- bc_insurance_selling.ipynb: first workbook which investigates using different techniques to overcome data imbalances. Achieved an ROC score of 82% using logistic regression.
+
 ## Disaster Tweets
 
 https://www.kaggle.com/competitions/nlp-getting-started
